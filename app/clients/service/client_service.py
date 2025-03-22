@@ -44,104 +44,101 @@ class ClientService:
         return {"clients": clients, "total": total}
 
     @staticmethod
-    def get_clients_by_criteria(
-        db: Session,
-        employment_status: Optional[bool] = None,
-        education_level: Optional[int] = None,
-        age_min: Optional[int] = None,
-        gender: Optional[int] = None,
-        work_experience: Optional[int] = None,
-        canada_workex: Optional[int] = None,
-        dep_num: Optional[int] = None,
-        canada_born: Optional[bool] = None,
-        citizen_status: Optional[bool] = None,
-        fluent_english: Optional[bool] = None,
-        reading_english_scale: Optional[int] = None,
-        speaking_english_scale: Optional[int] = None,
-        writing_english_scale: Optional[int] = None,
-        numeracy_scale: Optional[int] = None,
-        computer_scale: Optional[int] = None,
-        transportation_bool: Optional[bool] = None,
-        caregiver_bool: Optional[bool] = None,
-        housing: Optional[int] = None,
-        income_source: Optional[int] = None,
-        felony_bool: Optional[bool] = None,
-        attending_school: Optional[bool] = None,
-        substance_use: Optional[bool] = None,
-        time_unemployed: Optional[int] = None,
-        need_mental_health_support_bool: Optional[bool] = None
-    ):
-        """Get clients filtered by any combination of criteria"""
-        query = db.query(Client)
-    
+    def __update_query_by_filter(query, elements):
+        for element, value in elements:
+            if value is not None and element != "age":
+                query = query.filter(getattr(Client, element) == value)
+            elif value is not None and element is "age":
+                query = query.filter(getattr(Client, "age") >= value)
+        return query
+
+    @staticmethod
+    def __education_level_validation(education_level):
         if education_level is not None and not (1 <= education_level <= 14):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Education level must be between 1 and 14"
             )
-        
+
+    @staticmethod
+    def __age_validation(age_min):
         if age_min is not None and age_min < 18:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Minimum age must be at least 18"
             )
 
+    @staticmethod
+    def __gender_validation(gender):
         if gender is not None and gender not in [1, 2]:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Gender must be 1 or 2"
             )
 
-        # Apply filters for non-None values
-        if employment_status is not None:
-            query = query.filter(Client.currently_employed == employment_status)
-        if age_min is not None:
-            query = query.filter(Client.age >= age_min)
-        if gender is not None:
-            query = query.filter(Client.gender == gender)
-        if education_level is not None:
-            query = query.filter(Client.level_of_schooling == education_level)
-        if work_experience is not None:
-            query = query.filter(Client.work_experience == work_experience)
-        if canada_workex is not None:
-            query = query.filter(Client.canada_workex == canada_workex)
-        if dep_num is not None:
-            query = query.filter(Client.dep_num == dep_num)
-        if canada_born is not None:
-            query = query.filter(Client.canada_born == canada_born)
-        if citizen_status is not None:
-            query = query.filter(Client.citizen_status == citizen_status)
-        if fluent_english is not None:
-            query = query.filter(Client.fluent_english == fluent_english)
-        if reading_english_scale is not None:
-            query = query.filter(Client.reading_english_scale == reading_english_scale)
-        if speaking_english_scale is not None:
-            query = query.filter(Client.speaking_english_scale == speaking_english_scale)
-        if writing_english_scale is not None:
-            query = query.filter(Client.writing_english_scale == writing_english_scale)
-        if numeracy_scale is not None:
-            query = query.filter(Client.numeracy_scale == numeracy_scale)
-        if computer_scale is not None:
-            query = query.filter(Client.computer_scale == computer_scale)
-        if transportation_bool is not None:
-            query = query.filter(Client.transportation_bool == transportation_bool)
-        if caregiver_bool is not None:
-            query = query.filter(Client.caregiver_bool == caregiver_bool)
-        if housing is not None:
-            query = query.filter(Client.housing == housing)
-        if income_source is not None:
-            query = query.filter(Client.income_source == income_source)
-        if felony_bool is not None:
-            query = query.filter(Client.felony_bool == felony_bool)
-        if attending_school is not None:
-            query = query.filter(Client.attending_school == attending_school)
-        if substance_use is not None:
-            query = query.filter(Client.substance_use == substance_use)
-        if time_unemployed is not None:
-            query = query.filter(Client.time_unemployed == time_unemployed)
-        if need_mental_health_support_bool is not None:
-            query = query.filter(Client.need_mental_health_support_bool == need_mental_health_support_bool)
+    @staticmethod
+    def get_clients_by_criteria(
+            db: Session,
+            employment_status: Optional[bool] = None,
+            education_level: Optional[int] = None,
+            age_min: Optional[int] = None,
+            gender: Optional[int] = None,
+            work_experience: Optional[int] = None,
+            canada_workex: Optional[int] = None,
+            dep_num: Optional[int] = None,
+            canada_born: Optional[bool] = None,
+            citizen_status: Optional[bool] = None,
+            fluent_english: Optional[bool] = None,
+            reading_english_scale: Optional[int] = None,
+            speaking_english_scale: Optional[int] = None,
+            writing_english_scale: Optional[int] = None,
+            numeracy_scale: Optional[int] = None,
+            computer_scale: Optional[int] = None,
+            transportation_bool: Optional[bool] = None,
+            caregiver_bool: Optional[bool] = None,
+            housing: Optional[int] = None,
+            income_source: Optional[int] = None,
+            felony_bool: Optional[bool] = None,
+            attending_school: Optional[bool] = None,
+            substance_use: Optional[bool] = None,
+            time_unemployed: Optional[int] = None,
+            need_mental_health_support_bool: Optional[bool] = None
+    ):
+        """Get clients filtered by any combination of criteria"""
+        query = db.query(Client)
 
+        ClientService.__education_level_validation(education_level)
+        ClientService.__age_validation(age_min)
+        ClientService.__gender_validation(gender)
+
+        elements = {
+            "currently_employed": employment_status,
+            "age": age_min,
+            "gender": gender,
+            "level_of_schooling": education_level,
+            "work_experience": work_experience,
+            "canada_workex": canada_workex,
+            "dep_num": dep_num,
+            "canada_born": canada_born,
+            "citizen_status": citizen_status,
+            "fluent_english": fluent_english,
+            "reading_english_scale": reading_english_scale,
+            "speaking_english_scale": speaking_english_scale,
+            "writing_english_scale": writing_english_scale,
+            "numeracy_scale": numeracy_scale,
+            "computer_scale": computer_scale,
+            "transportation_bool": transportation_bool,
+            "caregiver_bool": caregiver_bool,
+            "housing": housing,
+            "income_source": income_source,
+            "felony_bool": felony_bool,
+            "attending_school": attending_school,
+            "substance_use": substance_use,
+            "time_unemployed": time_unemployed,
+            "need_mental_health_support_bool": need_mental_health_support_bool,
+        }
+
+        query = ClientService.__update_query_by_filter(query, elements)
         try:
             return query.all()
         except Exception as e:
