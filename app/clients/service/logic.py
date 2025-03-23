@@ -27,8 +27,24 @@ COLUMN_INTERVENTIONS = [
 # Load model
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(CURRENT_DIR, 'model.pkl')
-with open(MODEL_PATH, "rb") as model_file:
-    MODEL = pickle.load(model_file)
+# with open(MODEL_PATH, "rb") as model_file:
+#     MODEL = pickle.load(model_file)
+
+MODEL = load_model()
+
+def load_model():
+    """
+    Load the machine learning model from the specified path.
+    """
+
+    try:
+        with open(MODEL_PATH, "rb") as model_file:
+            model = pickle.load(model_file)
+        return model
+    except FileNotFoundError:
+        raise RuntimeError(f"Model file not found at {MODEL_PATH}.")
+    except Exception:
+        raise Exception("The model was not able to be loaded.")
 
 def clean_input_data(input_data):
     """
