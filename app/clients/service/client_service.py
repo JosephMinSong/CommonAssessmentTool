@@ -45,7 +45,7 @@ class ClientService:
 
     @staticmethod
     def __update_query_by_filter(query, elements):
-        for element, value in elements:
+        for element, value in elements.items():
             if value is not None and element != "age":
                 query = query.filter(getattr(Client, element) == value)
             elif value is not None and element is "age":
