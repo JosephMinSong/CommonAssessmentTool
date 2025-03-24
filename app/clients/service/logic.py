@@ -5,13 +5,16 @@ Handles data cleaning, model predictions, and intervention combinations analysis
 
 # Standard library imports
 import os
-#import json
+import json
 from itertools import product
 from app.utils import TextConverter
 
 # Third-party imports
 import pickle
 import numpy as np
+
+# Model paths
+from model_path import ModelPath
 
 # Constants
 COLUMN_INTERVENTIONS = [
@@ -23,19 +26,21 @@ COLUMN_INTERVENTIONS = [
     'Employer Financial Supports',
     'Enhanced Referrals for Skills Development'
 ]
+CURRENT_MODEL = ModelPath.FOREST_REGRSSION
 
 # Load model
-CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_PATH = os.path.join(CURRENT_DIR, 'model.pkl')
+# CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+# MODEL_PATH = os.path.join(CURRENT_DIR, FOREST_REGRSSION)
 # with open(MODEL_PATH, "rb") as model_file:
 #     MODEL = pickle.load(model_file)
 
-MODEL = load_model()
-
-def load_model():
+def load_model(model_type):
     """
     Load the machine learning model from the specified path.
     """
+    CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+    MODEL_PATH = os.path.join(CURRENT_DIR, model_type.value)
+    CURRENT_MODEL = model_type
 
     try:
         with open(MODEL_PATH, "rb") as model_file:
@@ -45,6 +50,22 @@ def load_model():
         raise RuntimeError(f"Model file not found at {MODEL_PATH}.")
     except Exception:
         raise Exception("The model was not able to be loaded.")
+
+
+def get_current_model():
+    """
+    Method to get the current model in use
+    """
+    return CURRENT_MODEL
+
+def list_all_models():
+    """
+    Method to list all models that our application has available
+    """
+    result = [{"name" : model.name, "value" : model.value} for model in ModelPath]
+    return json.dumps(result)
+
+MODEL = load_model(ModelPath.FOREST_REGRSSION)
 
 def clean_input_data(input_data):
     """
