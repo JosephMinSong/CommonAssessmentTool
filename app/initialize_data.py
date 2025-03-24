@@ -24,13 +24,13 @@ def initialize_database():
         # Create admin user if doesn't exist
         admin = db.query(User).filter(User.username == admin_username).first()
         if not admin:
-            admin_user = User(
+            admin = User(
                 username=admin_username,
                 email=admin_email,
                 hashed_password=get_password_hash(admin_password),
                 role=UserRole.admin
             )
-            db.add(admin_user)
+            db.add(admin)
             db.commit()
             print("Admin user created successfully")
         else:
@@ -100,7 +100,7 @@ def initialize_database():
             # Create client_case
             client_case = ClientCase(
                 client_id=client.id,
-                user_id=admin_user.id,  # Assign to admin
+                user_id=admin.id,  # Assign to admin
                 employment_assistance=bool(row['employment_assistance']),
                 life_stabilization=bool(row['life_stabilization']),
                 retention_services=bool(row['retention_services']),
