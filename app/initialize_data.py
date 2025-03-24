@@ -1,20 +1,33 @@
 import pandas as pd
+import os
+from dotenv import load_dotenv
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
 from app.models import Client, User, ClientCase, UserRole
 from app.auth.router import get_password_hash
 
+load_dotenv()
+
 def initialize_database():
     print("Starting database initialization...")
     db = SessionLocal()
     try:
+        # Retrieve admin credentials from environment variables
+        admin_username = os.getenv("ADMIN_USERNAME")
+        admin_email = os.getenv("ADMIN_EMAIL")
+        admin_password = os.getenv("ADMIN_PASSWORD")
+        # Retrieve case worker credentials from environment variables
+        case_worker_username = os.getenv("CASE_WORKER_USERNAME")
+        case_worker_email = os.getenv("CASE_WORKER_EMAIL")
+        case_worker_password = os.getenv("CASE_WORKER_PASSWORD")
+
         # Create admin user if doesn't exist
-        admin = db.query(User).filter(User.username == "admin").first()
+        admin = db.query(User).filter(User.username == admin_username).first()
         if not admin:
             admin_user = User(
-                username="admin",
-                email="admin@example.com",
-                hashed_password=get_password_hash("admin123"),
+                username=admin_username,
+                email=admin_email,
+                hashed_password=get_password_hash(admin_password),
                 role=UserRole.admin
             )
             db.add(admin_user)
@@ -24,12 +37,12 @@ def initialize_database():
             print("Admin user already exists")
 
         # Create case worker if doesn't exist
-        case_worker = db.query(User).filter(User.username == "case_worker1").first()
+        case_worker = db.query(User).filter(User.username == case_worker_username).first()
         if not case_worker:
             case_worker = User(
-                username="case_worker1",
-                email="caseworker1@example.com",
-                hashed_password=get_password_hash("worker123"),
+                username=case_worker_username,
+                email=case_worker_email,
+                hashed_password=get_password_hash(case_worker_password),
                 role=UserRole.case_worker
             )
             db.add(case_worker)
@@ -41,7 +54,7 @@ def initialize_database():
         # Load CSV data
         print("Loading CSV data...")
         df = pd.read_csv('app/clients/service/data_commontool.csv')
-        
+
         # Convert data types
         integer_columns = [
             'age', 'gender', 'work_experience', 'canada_workex', 'dep_num',
