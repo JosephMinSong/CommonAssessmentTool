@@ -32,3 +32,6 @@ htmlcov/
 .tox/
 .coverage
 .coverage.*
+
+# pickle files
+*.pkl

@@ -11,6 +11,9 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import ExtraTreesRegressor
+from sklearn.ensemble import AdaBoostRegressor
+from model_path import ModelPath
 
 def prepare_models():
     """
@@ -71,11 +74,20 @@ def prepare_models():
         random_state=42
     )
     # Initialize and train the model
-    model = RandomForestRegressor(n_estimators=100, random_state=42)
-    model.fit(features_train, targets_train)
-    return model
+    forest_model = RandomForestRegressor(n_estimators=100, random_state=42)
+    forest_model.fit(features_train, targets_train)
 
-def save_model(model, filename="model.pkl"):
+    extra_trees_model = ExtraTreesRegressor(n_estimators=100, random_state=42)
+    extra_trees_model.fit(features_train, targets_train)
+
+    ada_boost_model = AdaBoostRegressor(n_estimators=100, random_state=42)
+    ada_boost_model.fit(features_train, targets_train)
+
+    save_model(forest_model, ModelPath.FOREST_REGRSSION.value)
+    save_model(extra_trees_model, ModelPath.EXTRA_TREES_REGRESSOR.value)
+    save_model(ada_boost_model, ModelPath.ADA_BOOST_REGRESSOR.value)
+
+def save_model(model, filename):
     """
     Save the trained model to a file.
     
@@ -86,7 +98,7 @@ def save_model(model, filename="model.pkl"):
     with open(filename, "wb") as model_file:
         pickle.dump(model, model_file)
 
-def load_model(filename="model.pkl"):
+def load_model(filename):
     """
     Load a trained model from a file.
     
@@ -102,8 +114,7 @@ def load_model(filename="model.pkl"):
 def main():
     """Main function to train and save the model."""
     print("Starting model training...")
-    model = prepare_models()
-    save_model(model)
+    prepare_models()
     print("Model training completed and saved successfully.")
 
 if __name__ == "__main__":
