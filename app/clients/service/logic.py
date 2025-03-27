@@ -13,8 +13,7 @@ from app.utils import TextConverter
 import pickle
 import numpy as np
 
-# Model paths
-from model_path import ModelPath
+from app.clients.service.model_path import ModelPath
 
 # Constants
 COLUMN_INTERVENTIONS = [
@@ -26,7 +25,7 @@ COLUMN_INTERVENTIONS = [
     'Employer Financial Supports',
     'Enhanced Referrals for Skills Development'
 ]
-CURRENT_MODEL = ModelPath.FOREST_REGRSSION
+CURRENT_MODEL = "forest regression"
 
 # Load model
 # CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -34,22 +33,35 @@ CURRENT_MODEL = ModelPath.FOREST_REGRSSION
 # with open(MODEL_PATH, "rb") as model_file:
 #     MODEL = pickle.load(model_file)
 
-def load_model(model_type):
+def load_model(model):
     """
     Load the machine learning model from the specified path.
     """
+    global CURRENT_MODEL
+    model_name = model.lower()
+    model_type = ""
+    if model_name == "forest regression":
+        model_type = ModelPath.FOREST_REGRSSION
+    elif model_name == "extra trees regression":
+        model_type = ModelPath.EXTRA_TREES_REGRESSOR
+    elif model_name == "ada boost regression":
+        model_type = ModelPath.ADA_BOOST_REGRESSOR
+
+
     CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
     MODEL_PATH = os.path.join(CURRENT_DIR, model_type.value)
-    CURRENT_MODEL = model_type
+    CURRENT_MODEL = model_name
 
     try:
         with open(MODEL_PATH, "rb") as model_file:
             model = pickle.load(model_file)
-        return model
+        return {"message" : "success"}
     except FileNotFoundError:
-        raise RuntimeError(f"Model file not found at {MODEL_PATH}.")
+        # raise RuntimeError(f"Model file not found at {MODEL_PATH}.")
+        return {"message" : "not success"}
     except Exception:
-        raise Exception("The model was not able to be loaded.")
+        # raise Exception("The model was not able to be loaded.")
+        return {"message" : "not able to load"}
 
 
 def get_current_model():
@@ -65,7 +77,7 @@ def list_all_models():
     result = [{"name" : model.name, "value" : model.value} for model in ModelPath]
     return json.dumps(result)
 
-MODEL = load_model(ModelPath.FOREST_REGRSSION)
+MODEL = load_model("forest regression")
 
 def clean_input_data(input_data):
     """
