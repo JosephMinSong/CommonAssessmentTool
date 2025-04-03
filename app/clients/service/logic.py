@@ -55,14 +55,11 @@ def load_model(model):
     try:
         with open(MODEL_PATH, "rb") as model_file:
             model = pickle.load(model_file)
-        return {"message" : "success"}
+        return model
     except FileNotFoundError:
-        # raise RuntimeError(f"Model file not found at {MODEL_PATH}.")
-        return {"message" : "not success"}
+        raise RuntimeError(f"Model file not found at {MODEL_PATH}.")
     except Exception:
-        # raise Exception("The model was not able to be loaded.")
-        return {"message" : "not able to load"}
-
+        raise Exception("The model was not able to be loaded.")
 
 def get_current_model():
     """
@@ -76,8 +73,6 @@ def list_all_models():
     """
     result = [{"name" : model.name, "value" : model.value} for model in ModelPath]
     return json.dumps(result)
-
-MODEL = load_model("forest regression")
 
 def clean_input_data(input_data):
     """
@@ -103,7 +98,7 @@ def clean_input_data(input_data):
     for column in columns:
         value = demographics.get(column, None)
         if isinstance(value, str):
-            value = convert_text(value)  # Removed 'column' from here as it wasn't used
+            value = TextConverter.convert_text(value)  # Removed 'column' from here as it wasn't used
         output.append(value)
     return output
 
@@ -189,11 +184,15 @@ def interpret_and_calculate(input_data):
     Returns:
         dict: Processed results with recommendations
     """
+    global CURRENT_MODEL
     raw_data = clean_input_data(input_data)
     baseline_row = get_baseline_row(raw_data).reshape(1, -1)
     intervention_rows = create_matrix(raw_data)
-    baseline_prediction = MODEL.predict(baseline_row)
-    intervention_predictions = MODEL.predict(intervention_rows).reshape(-1, 1)
+    model = load_model(CURRENT_MODEL)
+    print("Currently using model: ", end="")
+    print(CURRENT_MODEL)
+    baseline_prediction = model.predict(baseline_row)
+    intervention_predictions = model.predict(intervention_rows).reshape(-1, 1)
     result_matrix = np.concatenate((intervention_rows, intervention_predictions), axis=1)
     result_order = result_matrix[:, -1].argsort()
     result_matrix = result_matrix[result_order]
