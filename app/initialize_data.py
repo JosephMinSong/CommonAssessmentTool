@@ -118,6 +118,7 @@ def initialize_database():
             db.commit()
 
         print("Database initialization completed successfully!")
+        logging.info("DOCKER LOG: Database initialization completed successfully!")
 
     except Exception as e:
         print(f"Error during initialization: {e}")

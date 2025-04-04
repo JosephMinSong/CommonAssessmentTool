@@ -90,6 +90,7 @@ def prepare_models():
     save_model(forest_model, ModelPath.FOREST_REGRSSION.value)
     save_model(extra_trees_model, ModelPath.EXTRA_TREES_REGRESSOR.value)
     save_model(ada_boost_model, ModelPath.ADA_BOOST_REGRESSOR.value)
+    logging.info("DOCKER LOG: Successfully created all models")
 
 def save_model(model, filename):
     """
