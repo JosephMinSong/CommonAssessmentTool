@@ -11,6 +11,7 @@ from app.clients.router import router as clients_router
 from app.auth.router import router as auth_router
 from app.clients.service.router import router as model_router
 from fastapi.middleware.cors import CORSMiddleware
+from app.initialize_data import initialize_database
 
 # Initialize database tables
 models.Base.metadata.create_all(bind=engine)
@@ -31,3 +32,8 @@ app.add_middleware(
     allow_headers=["*"],     # Allows all headers
     allow_credentials=True,
 )
+
+@app.on_event("startup")
+async def startup_event():
+    print("Server started. Initializing database...")
+    initialize_database()

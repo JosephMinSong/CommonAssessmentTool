@@ -7,4 +7,8 @@ echo "Installing editable mode... (pip install -e .)"
 pip install -e .
 
 echo "Running load_data and start script..."
-load_data && start
+start &
+
+sleep 5
+
+load_data
