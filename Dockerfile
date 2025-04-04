@@ -16,6 +16,7 @@ RUN pip install -e .
 # Copy the rest of your application
 COPY ./app /code/app
 
+# Ensure path to code
 ENV PYTHONPATH=/code
 
 # Expose the port your app runs on
