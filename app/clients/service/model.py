@@ -13,9 +13,13 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.ensemble import AdaBoostRegressor
-from model_path import ModelPath
+from app.clients.service.model_path import ModelPath
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 def prepare_models():
+    logging.info("DOCKER LOG: Preparing models")
     """
     Prepare and train the Random Forest model using the dataset.
     
@@ -23,7 +27,7 @@ def prepare_models():
         RandomForestRegressor: Trained model for predicting success rates
     """
     # Load dataset
-    data = pd.read_csv('data_commontool.csv')
+    data = pd.read_csv('app/clients/service/data_commontool.csv')
     # Define feature columns
     feature_columns = [
         'age',                    # Client's age

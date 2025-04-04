@@ -12,6 +12,7 @@ from app.auth.router import router as auth_router
 from app.clients.service.router import router as model_router
 from fastapi.middleware.cors import CORSMiddleware
 from app.initialize_data import initialize_database
+from app.clients.service.model import prepare_models
 
 # Initialize database tables
 models.Base.metadata.create_all(bind=engine)
@@ -33,7 +34,10 @@ app.add_middleware(
     allow_credentials=True,
 )
 
+# Triggers when app is actually instantiated and will asynchronously run
 @app.on_event("startup")
 async def startup_event():
-    print("Server started. Initializing database...")
     initialize_database()
+    prepare_models()
+
+
