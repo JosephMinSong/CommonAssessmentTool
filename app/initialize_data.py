@@ -5,11 +5,15 @@ from sqlalchemy.orm import Session
 from app.database import SessionLocal
 from app.models import Client, User, ClientCase, UserRole
 from app.auth.router import get_password_hash
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 load_dotenv()
 
 def initialize_database():
     print("Starting database initialization...")
+    logging.info("DOCKER LOG: Starting database initialization...")
     db = SessionLocal()
     try:
         # Retrieve admin credentials from environment variables
@@ -114,6 +118,7 @@ def initialize_database():
             db.commit()
 
         print("Database initialization completed successfully!")
+        logging.info("DOCKER LOG: Database initialization completed successfully!")
 
     except Exception as e:
         print(f"Error during initialization: {e}")
