@@ -13,11 +13,12 @@ COPY ./startup.sh /code/startup.sh
 # Make sure that we have access to the bash script
 RUN chmod +x /code/startup.sh
 
-# Copy the rest of your application
-COPY . /code/
+# Copy db
+COPY ./sql_app.db /code/
+COPY ./test.db /code/
 
-# Copy env file -- probably need to fix
-COPY ./.env /code/.env
+# Copy the rest of your application
+COPY ./app /code/app
 
 # Expose the port your app runs on
 EXPOSE 8000
