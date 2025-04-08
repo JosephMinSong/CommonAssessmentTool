@@ -25,7 +25,7 @@ jobs:
 
       - name: Install dependencies from pyproject.toml
         run: |
-          pip install -e .
+          pip install .
 
       - name: Run Black Formatter
         run: |
@@ -60,7 +60,7 @@ jobs:
 
       - name: Run Docker Container
         run: |
-          docker run -d --name test_container -p 8000:8000 common-assessment-tool
+          docker run -d --name backend_container --env-file .env -p 8000:8000 common-assessment-tool
           sleep 10  # Wait for container to start
 
       - name: Test Docker Container
