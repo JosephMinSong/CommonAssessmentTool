@@ -6,6 +6,9 @@ from app.database import Base, get_db
 from app.main import app
 from app.auth.router import get_password_hash
 from app.models import User, UserRole, Client, ClientCase
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Create test database
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
