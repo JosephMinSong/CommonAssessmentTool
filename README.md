@@ -34,9 +34,7 @@ Running with Docker
 
 ----------------------Next Steps (Running App)--------------------------
 
-3. Run method to load machine learning models (python model.py) from /app/clients/service/
-
-4. Go to SwaggerUI (http://127.0.0.1:8000/docs)
+3. Go to SwaggerUI (http://127.0.0.1:8000/docs)
 
 4. Log in as admin (username: admin password: admin123)
 
