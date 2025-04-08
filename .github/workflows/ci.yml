@@ -74,6 +74,26 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Create .env file
+        run: |
+          cat <<EOF > .env
+          # Admin Credentials
+          ADMIN_USERNAME=admin
+          ADMIN_EMAIL=admin@example.com
+          ADMIN_PASSWORD=admin123
+          # Case Worker Credentials
+          CASE_WORKER_USERNAME=case_worker1
+          CASE_WORKER_EMAIL=caseworker1@example.com
+          CASE_WORKER_PASSWORD=worker123
+          # Auth Router Configs
+          SECRET_KEY=your-secret-key-here
+          ALGORITHM=HS256
+          ACCESS_TOKEN_EXPIRE_MINUTES=30
+          # Database Configuration
+          DATABASE_URL=sqlite:///./sql_app.db
+          EOF
+          cat .env
+
       - name: Build Docker Image
         run: |
           docker build -t common-assessment-tool .
