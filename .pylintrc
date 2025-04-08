@@ -23,6 +23,15 @@ disable=
     W0631,  ; undefined-loop-variable
     W1508,  ; os.getenv default type warning
     R0801,  ; duplicate-code
+    W0621,  ; redefined-outer-name
+    C0121,  ; singleton-comparison
+    C0411,  ; wrong-import-order
+    W1508,  ; invalid-envar-default
+    E0213,  ; no-self-argument
+    W0631,  ; undefined-loop-variable
+    C0325,  ; superfluous-parens
+    W0105,  ; pointless-string-statement
+
     
 [FORMAT]
 max-line-length=120

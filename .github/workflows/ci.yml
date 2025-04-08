@@ -33,7 +33,7 @@ jobs:
 
       - name: Run Linter
         run: |
-          pylint app tests
+          pylint app tests --rcfile=.pylintrc
 
       - name: Run Tests
         run: |
