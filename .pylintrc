@@ -1,0 +1,15 @@
+[MASTER]
+# Specify directories and files to ignore
+ignore=venv, my_env, build, dist, __pycache__
+
+[MESSAGES CONTROL]
+# Disable specific messages by their ID
+disable=
+    C0114,  ; missing-module-docstring
+    C0116,  ; missing-function-docstring
+    R0903,  ; too-few-public-methods
+    W0613,  ; unused-argument
+    R0801   ; duplicate-code
+    
+[FORMAT]
+max-line-length=120
