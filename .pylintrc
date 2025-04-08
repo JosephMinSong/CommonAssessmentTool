@@ -6,10 +6,16 @@ ignore=venv, my_env, build, dist, __pycache__
 # Disable specific messages by their ID
 disable=
     C0114,  ; missing-module-docstring
+    C0115,  ; missing-class-docstring
     C0116,  ; missing-function-docstring
     R0903,  ; too-few-public-methods
+    W0611,  ; unused-import
+    W0612,  ; unused-variable
     W0613,  ; unused-argument
-    R0801   ; duplicate-code
+    R0913,  ; too-many-arguments
+    R0914,  ; too-many-locals
+    W0707,  ; catch-all exception warning
+    R0801,  ; duplicate-code
     
 [FORMAT]
 max-line-length=120
