@@ -31,7 +31,9 @@ disable=
     W0631,  ; undefined-loop-variable
     C0325,  ; superfluous-parens
     W0105,  ; pointless-string-statement
-
+    W0603,  ; global-statement
+    W0719,  ; broad-exception-raised
+    W0602,  ; global-variable-not-assigned
     
 [FORMAT]
 max-line-length=120
