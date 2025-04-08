@@ -8,13 +8,20 @@ disable=
     C0114,  ; missing-module-docstring
     C0115,  ; missing-class-docstring
     C0116,  ; missing-function-docstring
+    C0411,  ; wrong-import-order
+    C0412,  ; ungrouped-imports
+    C0103,  ; invalid-name
     R0903,  ; too-few-public-methods
+    R0913,  ; too-many-arguments
+    R0914,  ; too-many-locals
+    W0718,  ; catching too general exception
+    W0707,  ; raising too general exception
     W0611,  ; unused-import
     W0612,  ; unused-variable
     W0613,  ; unused-argument
-    R0913,  ; too-many-arguments
-    R0914,  ; too-many-locals
-    W0707,  ; catch-all exception warning
+    W0621,  ; redefined-outer-name
+    W0631,  ; undefined-loop-variable
+    W1508,  ; os.getenv default type warning
     R0801,  ; duplicate-code
     
 [FORMAT]
