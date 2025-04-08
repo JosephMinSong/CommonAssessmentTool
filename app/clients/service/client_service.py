@@ -48,7 +48,7 @@ class ClientService:
         for element, value in elements.items():
             if value is not None and element != "age":
                 query = query.filter(getattr(Client, element) == value)
-            elif value is not None and element is "age":
+            elif value is not None and element == "age":
                 query = query.filter(getattr(Client, "age") >= value)
         return query
 

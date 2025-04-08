@@ -71,8 +71,7 @@ def list_all_models():
     """
     Method to list all models that our application has available
     """
-    result = [{"name" : model.name, "value" : model.value} for model in ModelPath]
-    return json.dumps(result)
+    return json.dumps([{"model name" : model.name} for model in ModelPath])
 
 def clean_input_data(input_data):
     """
