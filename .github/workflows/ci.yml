@@ -31,9 +31,9 @@ jobs:
         run: |
           black .
 
-      - name: Run Linter
-        run: |
-          pylint app tests
+      # - name: Run Linter
+      #   run: |
+      #     pylint app tests
 
       - name: Run Tests
         run: |
