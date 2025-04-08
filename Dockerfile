@@ -4,17 +4,23 @@ FROM python:3.11
 # Set working directory
 WORKDIR /code
 
-# Copy requirements first to leverage Docker cache
-COPY ./requirements.txt /code/requirements.txt
+# Copy TOML file 
+COPY ./pyproject.toml /code/pyproject.toml
 
-# Install required packages
-RUN pip install --no-cache-dir -r /code/requirements.txt
+# Run pip install .
+RUN pip install .
+
+# Run pip install -e .
+RUN pip install -e .
 
 # Copy the rest of your application
-COPY . /code/
+COPY ./app /code/app
+
+# Ensure path to code
+ENV PYTHONPATH=/code
 
 # Expose the port your app runs on
 EXPOSE 8000
 
 # Command to run the application
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["python", "app/run.py"]
