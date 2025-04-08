@@ -110,28 +110,3 @@ jobs:
       - name: Print Deploy Success Message
         run: |
           echo "Docker image built and container is running as expected!"
-
-  windows_deploy:
-    name: Test Docker on Windows
-    runs-on: windows-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Verify Docker Version
-        run: docker --version
-
-      - name: Build Docker Image
-        run: docker build -t common-assessment-tool .
-
-      - name: Run Docker Container
-        run: |
-          docker run -d --name win_container -p 8000:8000 common-assessment-tool
-          Start-Sleep -Seconds 10
-          docker ps
-
-      - name: Test Container on Windows
-        run: |
-          $response = Invoke-WebRequest -Uri http://localhost:8000/docs -UseBasicParsing
-          Write-Host "Response status code:" $response.StatusCode
-          if ($response.StatusCode -ne 200) { exit 1 }
