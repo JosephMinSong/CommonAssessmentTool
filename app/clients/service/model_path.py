@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class ModelPath(Enum):
     FOREST_REGRSSION = "forest_regression.pkl"
     EXTRA_TREES_REGRESSOR = "extra_trees_regressor.pkl"

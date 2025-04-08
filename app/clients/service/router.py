@@ -7,18 +7,22 @@ from app.clients.service.logic import get_current_model, list_all_models, load_m
 
 router = APIRouter(prefix="/model", tags=["model logic"])
 
+
 @router.get("/get_current_model")
 async def current_model():
-    return {"name" : get_current_model()}
+    return {"name": get_current_model()}
+
 
 @router.get("/list_all_models")
 async def all_models():
     return list_all_models()
 
+
 @router.post("/change_model")
 async def change_model(model):
     load_model(model)
-    return {"message" : f"Successfully changed model to: {model}"}
+    return {"message": f"Successfully changed model to: {model}"}
+
 
 @router.post("/predictions")
 async def predict(data: PredictionInput):

@@ -8,7 +8,7 @@ def start():
         port=8000,
         # If you're running in production, disable reload=True
         # it's meant for development only and consumes more resources.
-        reload=True, 
+        reload=True,
     )
 
 
