@@ -17,13 +17,13 @@ from app.clients.service.model_path import ModelPath
 
 # Constants
 COLUMN_INTERVENTIONS = [
-    'Life Stabilization',
-    'General Employment Assistance Services',
-    'Retention Services',
-    'Specialized Services',
-    'Employment-Related Financial Supports for Job Seekers and Employers',
-    'Employer Financial Supports',
-    'Enhanced Referrals for Skills Development'
+    "Life Stabilization",
+    "General Employment Assistance Services",
+    "Retention Services",
+    "Specialized Services",
+    "Employment-Related Financial Supports for Job Seekers and Employers",
+    "Employer Financial Supports",
+    "Enhanced Referrals for Skills Development",
 ]
 CURRENT_MODEL = "forest regression"
 
@@ -32,6 +32,7 @@ CURRENT_MODEL = "forest regression"
 # MODEL_PATH = os.path.join(CURRENT_DIR, FOREST_REGRSSION)
 # with open(MODEL_PATH, "rb") as model_file:
 #     MODEL = pickle.load(model_file)
+
 
 def load_model(model):
     """
@@ -47,7 +48,6 @@ def load_model(model):
     elif model_name == "ada boost regression":
         model_type = ModelPath.ADA_BOOST_REGRESSOR
 
-
     CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
     MODEL_PATH = os.path.join(CURRENT_DIR, model_type.value)
     CURRENT_MODEL = model_name
@@ -61,17 +61,20 @@ def load_model(model):
     except Exception:
         raise Exception("The model was not able to be loaded.")
 
+
 def get_current_model():
     """
     Method to get the current model in use
     """
     return CURRENT_MODEL
 
+
 def list_all_models():
     """
     Method to list all models that our application has available
     """
-    return json.dumps([{"model name" : model.name} for model in ModelPath])
+    return json.dumps([{"model name": model.name} for model in ModelPath])
+
 
 def clean_input_data(input_data):
     """
@@ -84,20 +87,39 @@ def clean_input_data(input_data):
         list: Cleaned and formatted data ready for model input
     """
     columns = [
-        "age", "gender", "work_experience", "canada_workex", "dep_num",
-        "canada_born", "citizen_status", "level_of_schooling", "fluent_english",
-        "reading_english_scale", "speaking_english_scale", "writing_english_scale",
-        "numeracy_scale", "computer_scale", "transportation_bool", "caregiver_bool",
-        "housing", "income_source", "felony_bool", "attending_school",
-        "currently_employed", "substance_use", "time_unemployed",
-        "need_mental_health_support_bool"
+        "age",
+        "gender",
+        "work_experience",
+        "canada_workex",
+        "dep_num",
+        "canada_born",
+        "citizen_status",
+        "level_of_schooling",
+        "fluent_english",
+        "reading_english_scale",
+        "speaking_english_scale",
+        "writing_english_scale",
+        "numeracy_scale",
+        "computer_scale",
+        "transportation_bool",
+        "caregiver_bool",
+        "housing",
+        "income_source",
+        "felony_bool",
+        "attending_school",
+        "currently_employed",
+        "substance_use",
+        "time_unemployed",
+        "need_mental_health_support_bool",
     ]
     demographics = {key: input_data[key] for key in columns}
     output = []
     for column in columns:
         value = demographics.get(column, None)
         if isinstance(value, str):
-            value = TextConverter.convert_text(value)  # Removed 'column' from here as it wasn't used
+            value = TextConverter.convert_text(
+                value
+            )  # Removed 'column' from here as it wasn't used
         output.append(value)
     return output
 
@@ -116,6 +138,7 @@ def create_matrix(row_data):
     perms = intervention_permutations(7)
     return np.concatenate((np.array(data), np.array(perms)), axis=1)
 
+
 def intervention_permutations(num):
     """
     Generate all possible intervention combinations.
@@ -127,6 +150,7 @@ def intervention_permutations(num):
         np.array: Matrix of all possible combinations
     """
     return np.array(list(product([0, 1], repeat=num)))
+
 
 def get_baseline_row(row_data):
     """
@@ -141,6 +165,7 @@ def get_baseline_row(row_data):
     base_interventions = np.zeros(7)
     return np.concatenate((np.array(row_data), base_interventions))
 
+
 def intervention_row_to_names(row_data):
     """
     Convert intervention row to list of intervention names.
@@ -152,6 +177,7 @@ def intervention_row_to_names(row_data):
         list: Names of active interventions
     """
     return [COLUMN_INTERVENTIONS[i] for i, value in enumerate(row_data) if value == 1]
+
 
 def process_results(baseline_pred, results_matrix):
     """
@@ -165,13 +191,10 @@ def process_results(baseline_pred, results_matrix):
         dict: Processed results with baseline and interventions
     """
     result_list = [
-        (row[-1], intervention_row_to_names(row[:-1]))
-        for row in results_matrix
+        (row[-1], intervention_row_to_names(row[:-1])) for row in results_matrix
     ]
-    return {
-        "baseline": baseline_pred[-1],
-        "interventions": result_list
-    }
+    return {"baseline": baseline_pred[-1], "interventions": result_list}
+
 
 def interpret_and_calculate(input_data):
     """
@@ -192,25 +215,43 @@ def interpret_and_calculate(input_data):
     print(CURRENT_MODEL)
     baseline_prediction = model.predict(baseline_row)
     intervention_predictions = model.predict(intervention_rows).reshape(-1, 1)
-    result_matrix = np.concatenate((intervention_rows, intervention_predictions), axis=1)
+    result_matrix = np.concatenate(
+        (intervention_rows, intervention_predictions), axis=1
+    )
     result_order = result_matrix[:, -1].argsort()
     result_matrix = result_matrix[result_order]
     top_results = result_matrix[-3:, -8:]
     return process_results(baseline_prediction, top_results)
 
+
 if __name__ == "__main__":
     test_data = {
-        "age": "23", "gender": "1", "work_experience": "1",
-        "canada_workex": "1", "dep_num": "0", "canada_born": "1",
-        "citizen_status": "2", "level_of_schooling": "2",
-        "fluent_english": "3", "reading_english_scale": "2",
-        "speaking_english_scale": "2", "writing_english_scale": "3",
-        "numeracy_scale": "2", "computer_scale": "3",
-        "transportation_bool": "2", "caregiver_bool": "1",
-        "housing": "1", "income_source": "5", "felony_bool": "1",
-        "attending_school": "0", "currently_employed": "1",
-        "substance_use": "1", "time_unemployed": "1",
-        "need_mental_health_support_bool": "1"
+        "age": "23",
+        "gender": "1",
+        "work_experience": "1",
+        "canada_workex": "1",
+        "dep_num": "0",
+        "canada_born": "1",
+        "citizen_status": "2",
+        "level_of_schooling": "2",
+        "fluent_english": "3",
+        "reading_english_scale": "2",
+        "speaking_english_scale": "2",
+        "writing_english_scale": "3",
+        "numeracy_scale": "2",
+        "computer_scale": "3",
+        "transportation_bool": "2",
+        "caregiver_bool": "1",
+        "housing": "1",
+        "income_source": "5",
+        "felony_bool": "1",
+        "attending_school": "0",
+        "currently_employed": "1",
+        "substance_use": "1",
+        "time_unemployed": "1",
+        "need_mental_health_support_bool": "1",
     }
     results = interpret_and_calculate(test_data)
     print(results)
+
+# test
