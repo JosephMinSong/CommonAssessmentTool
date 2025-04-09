@@ -1,4 +1,4 @@
-Team TicTech 
+Team ShipHappens
 
 Project -- Feature Development Backend: Create CRUD API's for Client
 
@@ -19,18 +19,29 @@ The model works off of dummy data of several combinations of clients alongside t
 
 This also has an API file to interact with the front end, and logic in order to process the interventions coming from the front end. This includes functions to clean data, create a matrix of all possible combinations in order to get the ones with the highest increase of success, and output the results in a way the front end can interact with.
 
--------------------------How to Use-------------------------
-1. In the virtual environment you've created for this project, install all dependencies in requirements.txt (pip install -r requirements.txt)
+-------------------------How to Use (Docker)-------------------------
+Running with Docker
 
-2. Run the app (uvicorn app.main:app --reload)
+1. With Docker running, build the Docker image making sure to replace image_name with the desired name for your Docker image(docker build -t image_name .)
 
-3. Load data into database (python initialize_data.py)
+2. Run the Docker image, making sure to replace image_name (docker run --env-file .env -p 8000:8000 image_name)
 
-4. Go to SwaggerUI (http://127.0.0.1:8000/docs)
+----------------------How to Use (Docker-Compose)----------------------
+
+1. Update the container_name field in the docker-compose.yml file with desired container name. With Docker running build the docker-compose image (docker-compose build)
+
+2. Start the container (docker-compose up)
+
+Optional: To delete the container after use (docker-compose down)
+
+----------------------Next Steps (Running App)--------------------------
+
+3. Go to SwaggerUI (http://127.0.0.1:8000/docs)
 
 4. Log in as admin (username: admin password: admin123)
 
-5. Click on each endpoint to use
+5. Click on each endpoint to use:
+
 -Create User (Only users in admin role can create new users. The role field needs to be either "admin" or "case_worker")
 
 -Get clients (Display all the clients that are in the database)
@@ -55,3 +66,12 @@ This also has an API file to interact with the front end, and logic in order to 
 
 -Create case assignment (Allow authorized users to create a new case assignment.)
 
+Model
+
+-Get current model (Allows user to see what the current ML model being used is.)
+
+-List all models (Allows user to see all available ML models)
+
+-Change model (Allows user to change the model used for predictions, currently supported for "forest regression", "ada boost regression", and "extra trees regression")
+
+-Predictions (allows user to generate predictions based on input using the ML model chosen)
