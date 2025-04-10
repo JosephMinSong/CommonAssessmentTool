@@ -36,7 +36,7 @@ Optional: To delete the container after use (docker-compose down)
 
 ----------------------Next Steps (Running App)--------------------------
 
-3. Go to SwaggerUI (http://127.0.0.1:8000/docs)
+3. Go to SwaggerUI (http://0.0.0.0:8000/docs)
 
 4. Log in as admin (username: admin password: admin123)
 
