@@ -34,8 +34,8 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker system prune -af || true
+            docker system prune -a || true
             docker pull josephmsong/common-assessment-tool:latest
             docker stop my-app || true
             docker rm my-app || true
-            docker run -d --env-file /home/ec2-user/app/.env -p 80:8080 --name my-app josephmsong/common-assessment-tool:latest
+            docker run -d --env-file /home/ec2-user/app/.env -p 80:8080 josephmsong/common-assessment-tool:latest
