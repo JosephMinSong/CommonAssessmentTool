@@ -27,3 +27,7 @@ async def change_model(model):
 @router.post("/predictions")
 async def predict(data: PredictionInput):
     return interpret_and_calculate(data.model_dump())
+
+@router.get("/my_new_api")
+async def new_api():
+    return {"message" : "Successfully redeployed from Docker"}
