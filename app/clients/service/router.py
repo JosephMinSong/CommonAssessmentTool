@@ -21,7 +21,7 @@ async def all_models():
 @router.post("/change_model")
 async def change_model(model):
     load_model(model)
-    return {"message": f"Successfully changed model to: {model}"}
+    return {"message": f"Successfully changed model to:  {model}"}
 
 
 @router.post("/predictions")
