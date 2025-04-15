@@ -34,6 +34,7 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker stop josephmsong/common-assessment-tool:latest || true
+            docker stop my-app:latest || true
             docker pull josephmsong/common-assessment-tool:latest
-            docker run -d --env-file /home/ec2-user/app/.env -p 8000:8000 josephmsong/common-assessment-tool:latest
+            docker tag josephmsong/common-assessment-tool:latest my-app:latest
+            docker run -d --env-file /home/ec2-user/app/.env -p 8000:8000 my-app:latest
