@@ -1,40 +1,64 @@
-Team ShipHappens
+# Team ShipHappens
 
-Project -- Feature Development Backend: Create CRUD API's for Client
-
-User Story
-
-As a user of the backend API's, I want to call API's that can retrieve, update, and delete information of clients who have already registered with the CaseManagment service so that I more efficiently help previous clients make better decisions on how to be gainfully employed.
-
-Acceptance Criteria
-- Provide REST API endpoints so that the Frontend can use them to get information on an existing client.
-- Document how to use the REST API
-- Choose and create a database to hold client information
-- Add tests
+## Project Requirements
+1. Refactor code, configure linting
+2. Feature Development Backend: ML Model Options
+3. Implement Docker and Docker-Compose
+4. CI/CD pipeline improvements
+5. Deploy on AWS
 
 
-This will contain the model used for the project that based on the input information will give the social workers the clients baseline level of success and what their success will be after certain interventions.
+### User Story
 
-The model works off of dummy data of several combinations of clients alongside the interventions chosen for them as well as their success rate at finding a job afterward. The model will be updated by the case workers by inputing new data for clients with their updated outcome information, and it can be updated on a daily, weekly, or monthly basis.
+As a user of the backend API's, I want to call API's that can utilize and switch ML models with the CaseManagment service so that I more efficiently help previous clients by generating predictions of client success.
 
-This also has an API file to interact with the front end, and logic in order to process the interventions coming from the front end. This includes functions to clean data, create a matrix of all possible combinations in order to get the ones with the highest increase of success, and output the results in a way the front end can interact with.
+### Deliverables
 
--------------------------How to Use (Docker)-------------------------
-Running with Docker
+Three machine learning models were trained and implemented. This project provides API's that allow the user to switch the model, generate client success predictions using the desired model, display the model currently used, and display all available models.
 
-1. With Docker running, build the Docker image making sure to replace image_name with the desired name for your Docker image(docker build -t image_name .)
+Improvements were added to update the CI/CD pipeline, running automatic tests and linting with Github Actions prior to merging and deployment.
 
-2. Run the Docker image, making sure to replace image_name (docker run --env-file .env -p 8000:8000 image_name)
+Finally, this project is deployed via AWS to provide a publicly available endpoint for ease of access.
 
-----------------------How to Use (Docker-Compose)----------------------
+## Access Application Publicly
+The backend application and endpoints can be accessed at the following link:
 
-1. Update the container_name field in the docker-compose.yml file with desired container name. With Docker running build the docker-compose image (docker-compose build)
+http://ec2-3-143-205-215.us-east-2.compute.amazonaws.com:8000/docs
 
-2. Start the container (docker-compose up)
+The CD pipeline was also updated to allow new changes to be  automatically tested and deployed to update the public endpoint.
 
-Optional: To delete the container after use (docker-compose down)
+## Running Application Locally
+### How to Use (Docker):
 
-----------------------Next Steps (Running App)--------------------------
+1. With Docker running, build the Docker image making sure to replace image_name with the desired name for your Docker image
+```
+docker build -t image_name .
+```
+
+2. Run the Docker image, making sure to replace image_name
+```
+docker run --env-file .env -p 8000:8000 image_name
+```
+
+### How to Use (Docker-Compose)
+
+1. Update the container_name field in the docker-compose.yml file with desired container name. With Docker running build the docker-compose image
+
+```
+docker-compose build
+```
+
+2. Start the container
+```
+docker-compose up
+```
+
+Optional: To delete the container after use
+```
+docker-compose down
+```
+
+### Next Steps (Running App)
 
 3. Go to SwaggerUI (http://0.0.0.0:8000/docs)
 
@@ -42,36 +66,40 @@ Optional: To delete the container after use (docker-compose down)
 
 5. Click on each endpoint to use:
 
--Create User (Only users in admin role can create new users. The role field needs to be either "admin" or "case_worker")
+## Endpoints:
 
--Get clients (Display all the clients that are in the database)
+#### Clients and Auth (Existing)
 
--Get client (Allow authorized users to search for a client by id. If the id is not in database, an error message will show.)
+- Create User (Only users in admin role can create new users. The role field needs to be either "admin" or "case_worker")
 
--Update client (Allow authorized users to update a client's basic info by inputting in client_id and providing updated values.)
+- Get clients (Display all the clients that are in the database)
 
--Delete client (Allow authorized users to delete a client by id. If an id is no longer in the database, an error message will show.)
+- Get client (Allow authorized users to search for a client by id. If the id is not in database, an error message will show.)
 
--Get clients by criteria (Allow authorized users to get a list of clients who meet a certain combination of criteria.)
+- Update client (Allow authorized users to update a client's basic info by inputting in client_id and providing updated values.)
 
--Get Clients by services (Allow authorized users to get a list of clients who meet a certain combination of service statuses.)
+- Delete client (Allow authorized users to delete a client by id. If an id is no longer in the database, an error message will show.)
 
--Get clients services (Allow authorized users to view a client's services' status.)
+- Get clients by criteria (Allow authorized users to get a list of clients who meet a certain combination of criteria.)
 
--Get clients by success rate (Allow authorized users to search for clients whose cases have a success rate beyond a certain number.)
+- Get Clients by services (Allow authorized users to get a list of clients who meet a certain combination of service statuses.)
 
--Get clients by case worker (Allow users to view which clients are assigned to a specific case worker.)
+- Get clients services (Allow authorized users to view a client's services' status.)
 
--Update client services (Allow users to update the service status of a case.)
+- Get clients by success rate (Allow authorized users to search for clients whose cases have a success rate beyond a certain number.)
 
--Create case assignment (Allow authorized users to create a new case assignment.)
+- Get clients by case worker (Allow users to view which clients are assigned to a specific case worker.)
 
-Model
+- Update client services (Allow users to update the service status of a case.)
 
--Get current model (Allows user to see what the current ML model being used is.)
+- Create case assignment (Allow authorized users to create a new case assignment.)
 
--List all models (Allows user to see all available ML models)
+#### Model (Newly Added)
 
--Change model (Allows user to change the model used for predictions, currently supported for "forest regression", "ada boost regression", and "extra trees regression")
+- Get current model (Allows user to see what the current ML model being used is.)
 
--Predictions (allows user to generate predictions based on input using the ML model chosen)
+- List all models (Allows user to see all available ML models)
+
+- Change model (Allows user to change the model used for predictions, currently supported for "forest regression", "ada boost regression", and "extra trees regression")
+
+- Predictions (allows user to generate predictions based on input using the ML model chosen)
