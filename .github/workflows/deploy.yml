@@ -38,4 +38,4 @@ jobs:
             docker pull josephmsong/common-assessment-tool:latest
             docker stop my-app || true
             docker rm my-app || true
-            docker run -d --env-file /home/ec2-user/app/.env -p 80:8080 --name my-app my-app
+            docker run -d --env-file /home/ec2-user/app/.env -p 8000:8000 josephmsong/common-assessment-tool:latest
